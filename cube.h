@@ -61,6 +61,7 @@ void	floor_render(t_data *f);
 void draw_circle(t_data *game, int x_c, int y_c, int radius, int color);
 int handle_input(int keycode, t_data *game);
 void draw_line(void *mlx, void *win, int x0, int y0, int x1, int y1, int color);
+void	draw_ray(t_data *f);
 
 extern int worldMap[24][24];
 

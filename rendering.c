@@ -87,3 +87,61 @@ void	floor_render(t_data *f)
 	mlx_put_image_to_window(f->mlx_connection,
 		f->mlx_window, f->img.img_ptr, 0, 0);
 }
+
+int	checkmap(int x, int y)
+{
+	int	new_x = map(x, 0, WIDTH, 0, 24);
+	int	new_y = map(y, 0, HEIGHT, 0, 24);
+	return(worldMap[new_x][new_y]);
+}
+
+void	draw_ray(t_data *f)
+{
+	float py = f->player_y;
+	float px = f->player_x;
+	int	r,mx,my,mp,dof;
+	float rx,ry,ra,xo,yo;
+	ra = f->player_angle;
+	for (r = 0; r < 1; r++)
+	{
+		dof = 0;
+		float atan = -1/tan(ra);
+		if (ra > PI)//might want to swap to <
+		{
+			ry = (((int)py>>6)<<6) - 0.0001;
+			rx = (py - ry) * atan + px;
+			yo = -64;
+			xo =- yo*atan;
+		}
+		if (ra < PI)//might want to swap to <
+		{
+			ry = (((int)py>>6)<<6) + 64;
+			rx = (py - ry) * atan + px;
+			yo = +64;
+			xo = -yo*atan;
+		}
+		if (ra == 0 || ra == PI)
+		{
+			rx = px;
+			ry = py;
+			dof = 8;
+		}
+		while (dof<8)
+		{
+			mx = map(rx, 0, WIDTH, 0, 24);
+			my = map(ry, 0, HEIGHT, 0, 24);
+			mp = my * WIDTH + mx;
+			(void)mp;
+			if (checkmap(mx, mx) == 1)
+				dof = 8;
+			else
+			{
+				rx+= xo;
+				ry += yo;
+				dof +=1;
+			}
+			draw_line(f->mlx_connection, f->mlx_window, f->player_x, f->player_y, f->player_x + rx * 50, f->player_y + ry * 50, BLUE);
+		}
+	}
+	
+}

@@ -48,5 +48,6 @@ int	key_handler(int keysym, t_data *f)
 	floor_render(f);
 	draw_circle(f, f->player_x, f->player_y, 15, RED);
 	draw_line(f->mlx_connection, f->mlx_window, f->player_x, f->player_y, 50 * f->player_dx + f->player_x, 50 * f->player_dy + f->player_y, RED);
+	draw_ray(f);
 	return (-1);
 }
