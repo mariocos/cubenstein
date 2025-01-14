@@ -1,5 +1,7 @@
 
 #include "cube.h"
+#include <math.h>
+
 
 int	close_handler(t_data *f)
 {
@@ -24,8 +26,27 @@ int	key_handler(int keysym, t_data *f)
 		f->player_x -= 5;
     else if (keysym == 100) // D key
 		f->player_x += 5;
+    else if (keysym == 65363) // D key
+	{
+		printf("heyo\n");
+		f->player_angle += 0.2;
+		if (f->player_angle > 2 * PI)
+			f->player_angle -= 2 * PI;
+		f->player_dx = cos(f->player_angle) * 5;
+		f->player_dy = sin(f->player_angle) * 5;
+	}
+    else if (keysym == 65361) // D key
+	{
+		printf("heyo\n");
+		f->player_angle -= 0.2;
+		if (f->player_angle < 0)
+			f->player_angle += 2 * PI;
+		f->player_dx = cos(f->player_angle) * 5;
+		f->player_dy = sin(f->player_angle) * 5;
+	}
 
 	floor_render(f);
 	draw_circle(f, f->player_x, f->player_y, 15, RED);
+	draw_line(f->mlx_connection, f->mlx_window, f->player_x, f->player_y, 50 * f->player_dx + f->player_x, 50 * f->player_dy + f->player_y, RED);
 	return (-1);
 }

@@ -19,7 +19,7 @@ RM = rm -f
 	${CC} ${CFLAGS} -c $< -o $@
 
 ${NAME}: ${OBJS}
-	${CC} ${CFLAGS} ${OBJS} -Lminilibx-linux -lmlx_Linux -lX11 -lXext -o ${NAME}
+	${CC} ${CFLAGS} ${OBJS} -Lminilibx-linux -lmlx_Linux -lX11 -lXext -lm -o ${NAME}
 
 all: ${NAME}
 

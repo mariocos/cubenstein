@@ -7,10 +7,12 @@
 # include "minilibx-linux/mlx.h"
 # include "X11/X.h"
 # include "X11/keysym.h"
+# include <math.h>
 
 //changeables
 # define WIDTH 800
 # define HEIGHT 800
+# define PI	3.1415
 
 
 # define BLACK       0x000000  // RGB(0, 0, 0)
@@ -34,8 +36,11 @@ typedef struct s_data
 	void	*mlx_connection;
 	void	*mlx_window;
 	t_img	img;
-    int     player_x;
-    int     player_y;
+    float     player_x;
+    float     player_y;
+	float	player_dx;
+	float	player_dy;
+	float	player_angle;
     int     player_radius;
 }	t_data;
 
@@ -55,6 +60,7 @@ void	ft_pixel_put(int x, int y, t_img *img, int color);
 void	floor_render(t_data *f);
 void draw_circle(t_data *game, int x_c, int y_c, int radius, int color);
 int handle_input(int keycode, t_data *game);
+void draw_line(void *mlx, void *win, int x0, int y0, int x1, int y1, int color);
 
 extern int worldMap[24][24];
 

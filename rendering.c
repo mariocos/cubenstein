@@ -47,6 +47,30 @@ void draw_circle(t_data *game, int x_c, int y_c, int radius, int color) {
     }
 }
 
+
+void draw_line(void *mlx, void *win, int x0, int y0, int x1, int y1, int color) {
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+    int sx = (x0 < x1) ? 1 : -1;
+    int sy = (y0 < y1) ? 1 : -1;
+    int err = dx - dy;
+    int e2;
+
+    while (1) {
+        mlx_pixel_put(mlx, win, x0, y0, color);
+        if (x0 == x1 && y0 == y1) break;
+        e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+        }
+    }
+}
+
 void	floor_render(t_data *f)
 {
 	int	x;
@@ -59,7 +83,7 @@ void	floor_render(t_data *f)
 		while (++x < WIDTH)
 			handle_pixel(x, y, f);
 	}
-//    draw_circle(f, f->player_x, f->player_y, f->player_radius, 0x00FF00);
+//   draw_circle(f, f->player_x, f->player_y, f->player_radius, 0x00FF00);
 	mlx_put_image_to_window(f->mlx_connection,
 		f->mlx_window, f->img.img_ptr, 0, 0);
 }
