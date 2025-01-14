@@ -59,7 +59,7 @@ void	floor_render(t_data *f)
 		while (++x < WIDTH)
 			handle_pixel(x, y, f);
 	}
-    draw_circle(f, f->player_x, f->player_y, f->player_radius, 0x00FF00);
+//    draw_circle(f, f->player_x, f->player_y, f->player_radius, 0x00FF00);
 	mlx_put_image_to_window(f->mlx_connection,
 		f->mlx_window, f->img.img_ptr, 0, 0);
 }

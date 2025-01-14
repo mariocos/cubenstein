@@ -38,13 +38,13 @@ int main(int argc, char **argv)
 
     cube.player_x = WIDTH / 2;
     cube.player_y = HEIGHT / 2;
-    cube.player_radius = 15;
+    cube.player_radius = 30;
 
 
 	data_init(&cube);
 	cube_init(&cube);
 	floor_render(&cube);
-    draw_circle(&cube, cube.player_x, cube.player_y, cube.player_radius, 0x00FF00);
+	draw_circle(&cube, cube.player_x, cube.player_y, cube.player_radius, 0x00FF00);
 	mlx_loop(cube.mlx_connection);
 	return (0);
 }
