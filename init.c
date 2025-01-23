@@ -30,25 +30,25 @@ void	cube_init(t_data *cube)
 	}
 	cube->img.pixels = mlx_get_data_addr(cube->img.img_ptr,
 			&cube->img.bpp, &cube->img.line_len, &cube->img.endian);
-	events_init(cube);
+//	events_init(cube);//trying to make it work a diferent way
 }
 
 
-void	events_init(t_data *f)
+/* void	events_init(t_data *f)
 {
 	mlx_hook(f->mlx_window,
 		KeyPress,
 		KeyPressMask,
 		key_handler,
 		f);
-/* 	mlx_hook(f->mlx_window,
+ 	mlx_hook(f->mlx_window,
 		ButtonPress,
 		ButtonPressMask,
 		mouse_handler,
-		f); *///unused rn
+		f); //unused rn
 	mlx_hook(f->mlx_window,
 		DestroyNotify,
 		StructureNotifyMask,
 		close_handler,
 		f);
-}
+} */

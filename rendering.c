@@ -41,7 +41,7 @@ void draw_circle(t_data *game, int x_c, int y_c, int radius, int color) {
     for (int y = y_c - radius; y <= y_c + radius; y++) {
         for (int x = x_c - radius; x <= x_c + radius; x++) {
             if ((x - x_c) * (x - x_c) + (y - y_c) * (y - y_c) <= radius * radius) {
-                mlx_pixel_put(game->mlx_connection, game->mlx_window, x, y, color);
+                ft_pixel_put(x, y, &game->img, color);
             }
         }
     }
@@ -71,22 +71,6 @@ void draw_line(void *mlx, void *win, int x0, int y0, int x1, int y1, int color) 
     }
 }
 
-void	floor_render(t_data *f)
-{
-	int	x;
-	int	y;
-
-	y = -1;
-	while (++y < HEIGHT)
-	{
-		x = -1;
-		while (++x < WIDTH)
-			handle_pixel(x, y, f);
-	}
-//   draw_circle(f, f->player_x, f->player_y, f->player_radius, 0x00FF00);
-	mlx_put_image_to_window(f->mlx_connection,
-		f->mlx_window, f->img.img_ptr, 0, 0);
-}
 
 int	checkmap(int x, int y)
 {

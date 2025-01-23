@@ -2,5 +2,7 @@
 
 void	data_init(t_data *d)
 {
-	d->name = "CUBO";
+	t_vars	data;
+	(void)d;
+	(void)data;
 }

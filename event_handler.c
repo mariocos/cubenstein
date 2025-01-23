@@ -13,41 +13,80 @@ int	close_handler(t_data *f)
 	return (-1);
 }
 
-int	key_handler(int keysym, t_data *f)
+int	ft_keypress(int	keysym, t_data *c)
 {
-	printf("key code %d\n", keysym);
 	if (keysym == XK_Escape)
-		close_handler(f);
-    else if (keysym == 119) // W key
-		f->player_y -= 5;
-    else if (keysym == 115) // S key
-		f->player_y += 5;
-    else if (keysym == 97) // A key
-		f->player_x -= 5;
-    else if (keysym == 100) // D key
-		f->player_x += 5;
-    else if (keysym == 65363) // D key
-	{
-		printf("heyo\n");
-		f->player_angle += 0.2;
-		if (f->player_angle > 2 * PI)
-			f->player_angle -= 2 * PI;
-		f->player_dx = cos(f->player_angle) * 5;
-		f->player_dy = sin(f->player_angle) * 5;
-	}
-    else if (keysym == 65361) // D key
-	{
-		printf("heyo\n");
-		f->player_angle -= 0.2;
-		if (f->player_angle < 0)
-			f->player_angle += 2 * PI;
-		f->player_dx = cos(f->player_angle) * 5;
-		f->player_dy = sin(f->player_angle) * 5;
-	}
-
-	floor_render(f);
-	draw_circle(f, f->player_x, f->player_y, 15, RED);
-	draw_line(f->mlx_connection, f->mlx_window, f->player_x, f->player_y, 50 * f->player_dx + f->player_x, 50 * f->player_dy + f->player_y, RED);
-	draw_ray(f);
-	return (-1);
+		close_handler(c);
+	if	(keysym == XK_w)
+		c->keys[0] = 1;
+	if	(keysym == XK_s)
+		c->keys[1] = 1;
+	if	(keysym == XK_a)
+		c->keys[2] = 1;
+	if	(keysym == XK_d)
+		c->keys[3] = 1;
+	if	(keysym == 65361)
+		c->keys[4] = 1;
+	if	(keysym == 65363)
+		c->keys[5] = 1;
+	return (1);
 }
+
+
+
+int	ft_keyrelease(int	keysym, t_data *c)
+{
+	if (keysym == XK_Escape)
+		close_handler(c);
+	if	(keysym == XK_w)
+		c->keys[0] = 0;
+	if	(keysym == XK_s)
+		c->keys[1] = 0;
+	if	(keysym == XK_a)
+		c->keys[2] = 0;
+	if	(keysym == XK_d)
+		c->keys[3] = 0;
+	if	(keysym == 65361)
+		c->keys[4] = 0;
+	if	(keysym == 65363)
+		c->keys[5] = 0;
+	return (1);
+}
+
+
+void	key_read(t_data *c)
+{
+	double strafe_x, strafe_y, help;
+
+	if (c->keys[0] == 1)//w key
+	{
+		c->player_y += c->player_dy * 0.01;
+		c->player_x += c->player_dx * 0.01; 
+	}
+	else if (c->keys[1] == 1)//s key
+	{
+		c->player_y -= c->player_dy * 0.01;
+		c->player_x -= c->player_dx * 0.01; 
+	}
+	if (c->keys[2] == 1)//A key
+	{
+		strafe_x = c->player_dy; // Perpendicular to player_dx/player_dy
+		strafe_y = -c->player_dx;
+		c->player_y += strafe_y * 0.01;
+		c->player_x += strafe_x * 0.01; 
+	}
+	else if (c->keys[3] == 1)//d key
+	{
+		strafe_x = -c->player_dy; // Perpendicular to player_dx/player_dy
+		strafe_y = c->player_dx;
+		c->player_y += strafe_y * 0.01;
+		c->player_x += strafe_x * 0.01; 
+	}
+	// Rotate left (Left arrow key)
+	if (c->keys[4] == 1)
+		rotation(c, -0.009);
+	// Rotate right (Right arrow key)
+	if (c->keys[5] == 1)
+		rotation(c, 0.009);
+}
+

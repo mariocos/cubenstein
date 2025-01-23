@@ -36,13 +36,50 @@ typedef struct s_data
 	void	*mlx_connection;
 	void	*mlx_window;
 	t_img	img;
+	int	keys[8];
+	int		rx;
     float     player_x;
     float     player_y;
 	float	player_dx;
 	float	player_dy;
+	float	plane_x;
+	float	plane_y;
 	float	player_angle;
     int     player_radius;
 }	t_data;
+
+typedef struct s_vars
+{
+	/* data */
+	double	camera_x;
+	double	ray_dx;
+	double	ray_dy;
+	double	r_dist_x;
+	double	r_dist_y;
+	double	r_delta_dist_x;
+	double	r_delta_dist_y;
+	int	ray_x_step;
+	int	ray_y_step;
+	int	map_x;
+	int	map_y;
+	int	hmap_x;
+	int	hmap_y;
+	int	side;
+}		t_vars;
+
+typedef	struct s_draw
+{
+	/* data */
+	double	wall_dist;
+	int	line_height;
+	int	draw_start;
+	int	draw_end;
+}		t_draw;
+
+
+
+/* singletons  */
+
 
 /*   init    */
 void	events_init(t_data *f);
@@ -53,6 +90,7 @@ void	data_init(t_data *d);
 /*    hooks  */
 int	close_handler(t_data *f);
 int	key_handler(int keysym, t_data *f);
+void	key_read(t_data *c);
 
 
 /*    rendering    */
@@ -62,6 +100,12 @@ void draw_circle(t_data *game, int x_c, int y_c, int radius, int color);
 int handle_input(int keycode, t_data *game);
 void draw_line(void *mlx, void *win, int x0, int y0, int x1, int y1, int color);
 void	draw_ray(t_data *f);
+
+/*  keys  */
+int	ft_keyrelease(int	keysym, t_data *c);
+int	ft_keypress(int	keysym, t_data *c);
+void	key_read(t_data *c);
+void rotation(t_data *c, float rot);
 
 extern int worldMap[24][24];
 
