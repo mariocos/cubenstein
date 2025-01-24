@@ -58,6 +58,7 @@ void	key_read(t_data *c)
 {
 	double strafe_x, strafe_y, help;
 
+	(void)help;
 	if (c->keys[0] == 1)//w key
 	{
 		c->player_y += c->player_dy * 0.01;
