@@ -107,17 +107,9 @@ void	render_cast(t_data *c, t_vars *v)
 	//printf("map  y %d and x %d player x  %f and y %f \n", v->map_x, v->map_y, c->player_x, c->player_y);
 	//printf("ray sizes %f and %f\n", v->r_dist_x, v->r_dist_y);
 	if (v->side == 0)
-	{
-		//printf("sied=1 rdistx %f and rdeltax %f\n", v->r_dist_x, v->r_delta_dist_x);
-	//	vars.wall_dist = ((v->map_x - c->player_x) + (1 - v->ray_x_step) / v->ray_dx;
-		vars.wall_dist = v->r_dist_x - v->r_delta_dist_x;
-	}
+		vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
 	else
-	{
-		//printf("sied=1 rdistx %f and rdeltax %f\n", v->r_dist_x, v->r_delta_dist_x);
-		//vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
-		vars.wall_dist = v->r_dist_y - v->r_delta_dist_y;
-	}
+			vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
 	//printf("wall dist %f and side %d\n", vars.wall_dist, v->side);
 	vars.line_height = (int)(HEIGHT / vars.wall_dist);
 	//printf("var line height is %d\n", vars.line_height);
@@ -229,7 +221,7 @@ int main(int argc, char **argv)
 	cube.player_y = 12;
 	cube.player_radius = 30;
 	cube.player_dx = 1;
-	cube.player_dy = 1;
+	cube.player_dy = 0;
 	cube.plane_x = 0;
 	cube.plane_y = 0.66;
 	cube.name = "cubo";
