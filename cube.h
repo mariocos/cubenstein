@@ -92,6 +92,8 @@ int	close_handler(t_data *f);
 int	key_handler(int keysym, t_data *f);
 void	key_read(t_data *c);
 
+/*  colisions  */
+double	dist_to_wall(t_data *c, double ray_dx, double ray_dy);
 
 /*    rendering    */
 void	ft_pixel_put(int x, int y, t_img *img, int color);
@@ -106,6 +108,13 @@ int	ft_keyrelease(int	keysym, t_data *c);
 int	ft_keypress(int	keysym, t_data *c);
 void	key_read(t_data *c);
 void rotation(t_data *c, float rot);
+
+/*raycasting*/
+void	set_ray_step(t_data *c, t_vars *v);
+void	hit_ray_into_wall(t_data *c, t_vars *v);
+
+
+
 
 extern int worldMap[24][24];
 

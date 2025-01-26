@@ -96,7 +96,6 @@ void	hit_ray_into_wall(t_data *c, t_vars *v)
 			break ;
 		}
 	}
-	//printf("map x %d and y %d and spot %d\n", v->map_x, v->map_y, worldMap[v->map_x][v->map_y]);
 }
 
 

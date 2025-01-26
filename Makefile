@@ -8,6 +8,7 @@ SRCS =	main.c \
 		event_handler.c \
 		data_init.c \
 		rendering.c \
+		colli.c \
 		
 		
 
