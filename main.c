@@ -161,6 +161,7 @@ int	hook_loop(t_data *c)
 {
 	t_vars	vars;
 
+	printf("pos x %f and y %f\n", c->player_x, c->player_y);
 	mlx_clear_window(c->mlx_connection, c->mlx_window);
 	key_read(c);
 	floor_render(c);
