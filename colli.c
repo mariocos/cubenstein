@@ -22,8 +22,9 @@ double	dist_to_wall(t_data *c, double ray_dx, double ray_dy)
 		/*   hit??   */
 	hit_ray_into_wall(c, &ray);
 	if (ray.side == 0)
-		wall_dist = (ray.map_x - c->player_x + (1 - ray.ray_x_step) / 2) / ray.ray_dx;
+		wall_dist = ray.r_dist_x - ray.r_delta_dist_x;
 	else
-		wall_dist = (ray.map_y - c->player_y + (1 - ray.ray_y_step) / 2) / ray.ray_dy;
+		wall_dist = ray.r_dist_y - ray.r_delta_dist_y;
+	printf("wall dist colli %f\n", wall_dist);
 	return (wall_dist);
 }

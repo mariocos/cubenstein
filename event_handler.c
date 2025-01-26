@@ -62,7 +62,8 @@ double	w_key_x(t_data *c)
 
 double	w_key_y(t_data *c)
 {
-	if (dist_to_wall(c, 0, c->player_y) > 0.5)
+	printf("step y %f\n", c->player_dy * 0.08);
+	if (dist_to_wall(c, 0, c->player_dy) > 0.5)
 		return (c->player_y + c->player_dy * 0.08);
 	return (c->player_y);
 }
