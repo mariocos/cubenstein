@@ -4,10 +4,18 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include "minilibx-linux/mlx.h"
-# include "X11/X.h"
-# include "X11/keysym.h"
+# include "../minilibx-linux/mlx.h"
+# include "../X11/X.h"
+# include "../X11/keysym.h"
 # include <math.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <fcntl.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 //changeables
 # define WIDTH 800
@@ -109,10 +117,24 @@ int	ft_keypress(int	keysym, t_data *c);
 void	key_read(t_data *c);
 void rotation(t_data *c, float rot);
 
+/* collision movement */
+double	a_key_x(t_data *c);
+double	a_key_y(t_data *c);
+double	d_key_x(t_data *c);
+double	d_key_y(t_data *c);
+double	w_key_x(t_data *c);
+double	w_key_y(t_data *c);
+double	s_key_x(t_data *c);
+double	s_key_y(t_data *c);
+
 /*raycasting*/
 void	set_ray_step(t_data *c, t_vars *v);
 void	hit_ray_into_wall(t_data *c, t_vars *v);
+void	init_ray(t_data *c, t_vars *v);
+void	render_cast(t_data *c, t_vars *v);
 
+/* movement */
+void rotation(t_data *c, float rot);
 
 
 

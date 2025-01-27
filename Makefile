@@ -3,32 +3,41 @@ CFLAGS = -Wall -Wextra -Werror -I includes
 
 NAME = cubo
 
-SRCS =	main.c \
-		init.c \
-		event_handler.c \
-		data_init.c \
-		rendering.c \
-		colli.c \
+OBJ_DIR = ./objs
+SRC_PATH = ./srcs
+
+SRCS =	$(SRC_PATH)/main.c \
+		$(SRC_PATH)/init.c \
+		$(SRC_PATH)/event_handler.c \
+		$(SRC_PATH)/data_init.c \
+		$(SRC_PATH)/rendering.c \
+		$(SRC_PATH)/colli.c \
+		$(SRC_PATH)/colli_move1.c \
+		$(SRC_PATH)/colli_move2.c \
+		$(SRC_PATH)/raycast.c \
+		$(SRC_PATH)/movement.c \
 		
 		
 
-OBJS = ${SRCS:.c=.o}
+OBJ = $(SRCS:$(SRC_PATH)/%.c=$(OBJ_DIR)/%.o)
 
-RM = rm -f
+CC = cc
+CFLAGS = -Wall -Werror -Wextra -g
 
-.c.o:
-	${CC} ${CFLAGS} -c $< -o $@
+all: $(NAME)
 
-${NAME}: ${OBJS}
-	${CC} ${CFLAGS} ${OBJS} -Lminilibx-linux -lmlx_Linux -lX11 -lXext -lm -o ${NAME}
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -Lminilibx-linux -lmlx_Linux -lX11 -lXext -lm -o $(NAME) -lreadline -lncurses
 
-all: ${NAME}
+$(OBJ_DIR)/%.o: $(SRC_PATH)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	${RM} ${OBJS}
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	${RM} ${NAME}
+	rm -rf $(NAME)
 
 re: fclean all
 
