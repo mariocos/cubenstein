@@ -62,7 +62,6 @@ double	w_key_x(t_data *c)
 
 double	w_key_y(t_data *c)
 {
-	printf("step y %f\n", c->player_dy * 0.08);
 	if (dist_to_wall(c, 0, c->player_dy) > 0.5)
 		return (c->player_y + c->player_dy * 0.08);
 	return (c->player_y);
@@ -135,9 +134,9 @@ void	key_read(t_data *c)
 	}
 	// Rotate left (Left arrow key)
 	if (c->keys[4] == 1)
-		rotation(c, -0.009);
+		rotation(c, -0.01);
 	// Rotate right (Right arrow key)
 	if (c->keys[5] == 1)
-		rotation(c, 0.009);
+		rotation(c, 0.01);
 }
 

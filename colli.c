@@ -25,6 +25,5 @@ double	dist_to_wall(t_data *c, double ray_dx, double ray_dy)
 		wall_dist = ray.r_dist_x - ray.r_delta_dist_x;
 	else
 		wall_dist = ray.r_dist_y - ray.r_delta_dist_y;
-	printf("wall dist colli %f\n", wall_dist);
 	return (wall_dist);
 }
