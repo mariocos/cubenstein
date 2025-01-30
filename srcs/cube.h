@@ -139,6 +139,9 @@ void rotation(t_data *c, float rot);
 /*  gnl  */
 char	*get_next_line(int fd);
 
+/* lib */
+char	**ft_split(char const *s, char c);
+
 /*     parsing    */
 
 

@@ -63,10 +63,29 @@ int	parse_texture_maps(int	fd)//this function leaks because im not sure where im
 	return(1);//i dont know what else to check about the xpm files
 }
 
+/* helper function */
+int	get_hex(char **strs)
+{
+	int	ret;
+
+	ret = 0;
+	ret += atoi(strs[0]);
+	ret += atoi(strs[1]) * 16^2;
+	ret += atoi(strs[2]) * 16^4;
+	printf("ret is %d and in hex [%f]\n", ret);
+	return (ret);
+}
+
+
+
 int parse_ceiling_and_floor(int fd)
 {
 	char *space_check;
 	char *str[2];//to be added to struct with value of the color
+	char	**c_values;
+	char	**f_values;
+	int		c_color;
+	int		f_color;
 
 	space_check = get_next_line(fd);
 	if (ft_strcmp(space_check, "\n") != 0)//remember to check if strcmp is prepped for nulls
@@ -74,7 +93,16 @@ int parse_ceiling_and_floor(int fd)
 	str[0] = get_next_line(fd);
 	str[1] = get_next_line(fd);
 	str[2] = NULL;
-
+	/* check the F and C and space */
+	if (ft_strlen(str[0] < 8) && str[0][0] != 'F' && str[0][1] != ' ')//needs to be checked if 8 or 7 cus of newline
+		return(-1);
+	if (ft_strlen(str[1] < 8) && str[1][0] != 'C' && str[1][1] != ' ')//needs to be checked if 8 or 7 cus of newline
+		return (-1);
+	/* split "," to get 3 ints 0-255 add them in hex (hex1*16^6 + hex2*16^4 + hex3)*/
+	c_values = ft_split(str[0] + 2, ',');
+	f_values = ft_split(str[1] + 2, ',');
+	c_color = get_hex(c_values);
+	f_color = get_hex(f_values);
 
 }
 
