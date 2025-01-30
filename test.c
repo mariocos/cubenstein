@@ -1,20 +1,29 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "srcs/cube.h"
 
-int	get_hex(char **strs)
+#include <stdio.h>
+#include <stdlib.h>
+
+int get_hex(char **strs)
 {
-	unsigned int	ret;
+    unsigned int ret = 0;
 
-	ret = 0;
-	ret += atoi(strs[0]);
-	ret += atoi(strs[1]) * 16^2;
-	ret += atoi(strs[2]) * 16^4;
-	printf("ret is %d and in hex [%x]\n", ret);
-	return (ret);
+	ret += atoi(strs[0]) << 16;//Red
+	ret += atoi(strs[1]) << 8;//Green
+	ret += atoi(strs[2]);//Blue
+	return ret;
 }
-
 
 int main(void)
 {
-	char **str;
+    char *str[] = {"255", "255", "255", NULL}; // Correct way to declare a string array
+
+    int test;
+
+    test = get_hex(str);
+
+    printf("Hex value: %X\n", test);
+
+    return 0;
 }

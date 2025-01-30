@@ -64,16 +64,14 @@ int	parse_texture_maps(int	fd)//this function leaks because im not sure where im
 }
 
 /* helper function */
-int	get_hex(char **strs)
+int get_hex(char **strs)// i love bitshitting
 {
-	int	ret;
+    unsigned int ret = 0;
 
-	ret = 0;
-	ret += atoi(strs[0]);
-	ret += atoi(strs[1]) * 16^2;
-	ret += atoi(strs[2]) * 16^4;
-	printf("ret is %d and in hex [%f]\n", ret);
-	return (ret);
+	ret += atoi(strs[0]) << 16;//Red
+	ret += atoi(strs[1]) << 8;//Green
+	ret += atoi(strs[2]);//Blue
+	return ret;
 }
 
 
