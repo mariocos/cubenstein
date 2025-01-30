@@ -136,6 +136,15 @@ void	render_cast(t_data *c, t_vars *v);
 /* movement */
 void rotation(t_data *c, float rot);
 
+/*  gnl  */
+char	*get_next_line(int fd);
+
+/*     parsing    */
+
+
+
+
+
 
 
 extern int worldMap[24][24];
