@@ -92,7 +92,10 @@ void	print_double_array(char **words)
 int main(int argc, char **argv)
 {
 	parse_input(argc, argv);
+	/*parsing file*/
 	print_double_array(p_call()->map);
+	/*validate map*/
+	validate_map(p_call());
 	return(1);
 
 

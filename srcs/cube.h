@@ -37,6 +37,7 @@ typedef struct s_parse
 	int		f_color;
 	char	*line;
 	char	**map;
+	char	**map_fl;
 	char	*map_file;
 	int	height;
 	int	max_len;
@@ -99,6 +100,13 @@ typedef	struct s_draw
 	int	draw_end;
 }		t_draw;
 
+typedef struct s_chars
+{
+	int	n_count;
+	int	s_count;
+	int	w_count;
+	int	e_count;
+}	t_chars;
 
 
 /* singletons  */
@@ -170,9 +178,10 @@ void	put_str_check(char *str);
 
 /*     parsing    */
 int	parse_input(int argc, char **argv);
+int	validate_map(t_parse *p);
 
-
-
+/*	is    */
+int	is_map_char(char c);
 
 
 

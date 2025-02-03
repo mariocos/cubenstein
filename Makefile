@@ -21,7 +21,7 @@ SRCS =	$(SRC_PATH)/main.c \
 		$(SRC_PATH)/parser/input_handle.c \
 		$(SRC_PATH)/parser/split.c \
 		$(SRC_PATH)/parser/singleton.c \
-		
+		$(SRC_PATH)/parser/validate.c \
 
 OBJ = $(SRCS:$(SRC_PATH)/%.c=$(OBJ_DIR)/%.o)
 

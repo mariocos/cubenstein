@@ -18,7 +18,7 @@ void	*ft_memset(void *s, int c, size_t n)
 
 int	is_map_char(char c)
 {
-	if (c == '1' || c == 'N' || c == 'S' || c == 'W' || c == 'E' || c == '0')
+	if (c == '1' || c == 'N' || c == 'S' || c == 'W' || c == 'E' || c == '0' || c == '9')
 		return (1);
 	return (0);
 }
@@ -43,7 +43,6 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	}
 	return (count);
 }
-
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
