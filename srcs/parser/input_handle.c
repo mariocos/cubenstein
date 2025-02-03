@@ -22,7 +22,6 @@ int	check_file_name(char *str)//not tested yet since i dont have the texture fil
 {
 	int	len;
 
-	printf("checking file name [%s]\n", str);
 	len = ft_strlen(str);
 	if (len < 5)//so it has the ".cub" (4 chars) and a valid filename (atleast one character).
 		return (-1);
@@ -194,9 +193,9 @@ void	alocate_map(t_parse *p)
 	p->map = malloc(sizeof(void*) * (p->height + 1));
 	while (i < p->height)
 	{
-		p->map[i] = malloc(p->max_len + 1);//change to safe malloc
+		p->map[i] = malloc(p->max_len + 2);//change to safe malloc
 		ft_memset(p->map[i], '9', p->max_len);
-		p->map[i][p->max_len] = '\0';
+		p->map[i][p->max_len + 1] = '\0';
 		put_str_check(p->map[i]);
 		i++;
 	}

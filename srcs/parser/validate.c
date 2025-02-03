@@ -52,15 +52,22 @@ void	get_map_dupe(t_parse *p)
 	print_double_array(p->map_fl);
 }
 
+int	index_out_of_range(t_parse *p, int x, int y)
+{
+	if (y < 0 || x < 0)
+		return (1);
+	if (!p->map[y] || !p->map[y][x])
+		return (1);
+	return (0);
+}
+
 /* recursive part*/
 int	flood_fill(t_parse *p, int x, int y)
 {
+	printf("checking [%c]\n", p->map[y][x]);
 	/* check if out of range */
-	if (p->map[y][x] == '9')
+	if (index_out_of_range(p, x, y) || p->map[y][x] == '9')
 		return (0);
-	if (is_map_char(p->map[y][x]))
-		return (1);
-	p->map_fl[y][x] = 'y';
 	if (!flood_fill(p, x + 1, y))
 		return (0);
 	if (!flood_fill(p, x - 1, y))
@@ -84,9 +91,8 @@ int	flood_loop(t_parse *p)
 		j = 0;
 		while (p->map[i][j] != '\0')
 		{
-			if (p->map[i][j] == '0' && p->map_fl[i][j] == 'n' && !flood_fill(p, j, i))
+			if (p->map[i][j] == '0' && flood_fill(p, j, i) == 0)
 				return (-1);
-			printf("x %d and y %d\n", j, i);
 			j++;
 		}
 		i++;
@@ -99,8 +105,6 @@ int	validate_map(t_parse *p)
 	if (count_chars(p->map) < 0)
 		return (-1); // change to exit protocoll
 	/* flood fill ??????? */
-	get_map_dupe(p);
-	printf("made it here\n");
 	if (flood_loop(p) < 0)
 	{
 		printf("floodable map\n");
