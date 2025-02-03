@@ -29,6 +29,21 @@
 # define GREEN       0x00FF00  // RGB(0, 255, 0)
 # define BLUE        0x0000FF  // RGB(0, 0, 255)
 
+typedef struct s_parse
+{
+	char	**wall_textures;
+	char	**scene_colors;
+	int		c_color;
+	int		f_color;
+	char	*line;
+	char	**map;
+	char	*map_file;
+	int	height;
+	int	max_len;
+	int		fd;
+}	t_parse;
+
+
 typedef struct s_img
 {
 	void	*img_ptr;
@@ -87,9 +102,10 @@ typedef	struct s_draw
 
 
 /* singletons  */
-
+t_parse	*p_call(void);
 
 /*   init    */
+void	parse_init(void);
 void	events_init(t_data *f);
 void	cube_init(t_data *cube);
 void	data_init(t_data *d);
@@ -141,9 +157,19 @@ char	*get_next_line(int fd);
 
 /* lib */
 char	**ft_split(char const *s, char c);
+void	*ft_memset(void *s, int c, size_t n);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+int	ft_strcmp(const char *s1, const char *s2);
+char	*ft_substr(char *s, int start, int len);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+char	*ft_strdup(char *s);
+int	ft_strlen(char *str);
+void	print_double_array(char **words);
+void	put_str_check(char *str);
+
 
 /*     parsing    */
-
+int	parse_input(int argc, char **argv);
 
 
 

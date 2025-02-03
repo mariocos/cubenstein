@@ -72,8 +72,30 @@ int	hook_loop(t_data *c)
 
 }
 
+void	print_double_array(char **words)
+{
+	int	i;
+
+	i = -1;
+	if (!words)
+	{
+		printf("char ** missing\n");
+		return ;
+	}
+	while (words[++i] != NULL)
+	{
+		printf("ind %d [%s]\n", i,  words[i]);
+	}
+	printf("last part is [%p]\n", words[i]);
+}
+
 int main(int argc, char **argv)
 {
+	parse_input(argc, argv);
+	print_double_array(p_call()->map);
+	return(1);
+
+
 	(void)argc;
 	(void)argv;
 	t_data	cube;

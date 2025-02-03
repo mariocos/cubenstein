@@ -16,7 +16,11 @@ SRCS =	$(SRC_PATH)/main.c \
 		$(SRC_PATH)/colli_move2.c \
 		$(SRC_PATH)/raycast.c \
 		$(SRC_PATH)/movement.c \
-		
+		$(SRC_PATH)/parser/gnl.c \
+		$(SRC_PATH)/parser/helpers.c \
+		$(SRC_PATH)/parser/input_handle.c \
+		$(SRC_PATH)/parser/split.c \
+		$(SRC_PATH)/parser/singleton.c \
 		
 
 OBJ = $(SRCS:$(SRC_PATH)/%.c=$(OBJ_DIR)/%.o)

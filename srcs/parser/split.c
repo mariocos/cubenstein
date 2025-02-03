@@ -1,4 +1,4 @@
-#include "cube.h"
+#include "../cube.h"
 
 int	countwords(char const *s, char c)
 {
