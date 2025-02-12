@@ -31,13 +31,13 @@ void	cube_init(t_data *cube)
 	cube->img.pixels = mlx_get_data_addr(cube->img.img_ptr,
 			&cube->img.bpp, &cube->img.line_len, &cube->img.endian);
 	//printf("abrir....\n");
-	cube->wall.wall_texture = mlx_xpm_file_to_image(cube->mlx_connection, "srcs/wall.xpm", &cube->wall.tex_width, &cube->wall.tex_height);
-	if (!cube->wall.wall_texture)
+	cube->wall->wall_texture = mlx_xpm_file_to_image(cube->mlx_connection, "srcs/wall.xpm", &cube->wall->tex_width, &cube->wall->tex_height);
+	if (!cube->wall->wall_texture)
 	{
         printf("Erro ao carregar a textura!\n");
         exit(1);
     }
-    cube->wall.wall_pixels = mlx_get_data_addr(cube->wall.wall_texture, &cube->img.bpp, &cube->img.line_len, &cube->img.endian);
+    cube->wall->wall_pixels = mlx_get_data_addr(cube->wall->wall_texture, &cube->img.bpp, &cube->img.line_len, &cube->img.endian);
 	//events_init(cube);//trying to make it work a diferent way
 }
 

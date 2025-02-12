@@ -71,9 +71,18 @@ void	hit_ray_into_wall(t_data *c, t_vars *v)
 }
 
 
-void	render_cast(t_data *c, t_vars *v)
+/*void	render_cast(t_data *c, t_vars *v)
 {
 	t_draw	vars;
+	t_wall    wall;
+
+	wall.wall_texture = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", &c->wall.tex_width, &c->wall.tex_height);
+	if (!wall.wall_texture)
+	{
+        printf("Erro ao carregar a textura!\n");
+        exit(1);
+    }
+    wall.wall_pixels = mlx_get_data_addr(wall.wall_texture, &wall.bpp, &wall.line_len, &wall.endian);
 
 	//printf("map  y %d and x %d player x  %f and y %f \n", v->map_x, v->map_y, c->player_x, c->player_y);
 	//printf("ray sizes %f and %f\n", v->r_dist_x, v->r_dist_y);
@@ -111,30 +120,97 @@ void	render_cast(t_data *c, t_vars *v)
 	//}
 	int tex_x;
 	if (v->side == 0)
-        tex_x = (int)(c->player_y + vars.wall_dist * v->ray_dy) % c->wall.tex_width;
+        tex_x = (int)(c->player_y + vars.wall_dist * v->ray_dy) % wall.tex_width;
 	else
-        tex_x = (int)(c->player_x + vars.wall_dist * v->ray_dx) % c->wall.tex_width;
+        tex_x = (int)(c->player_x + vars.wall_dist * v->ray_dx) % wall.tex_width;
 
-	// Certificar que tex_x está dentro dos limites da textura
 	if (tex_x < 0)
-    		tex_x += c->wall.tex_width;
+        tex_x += wall.tex_width;
 
 	for (int y = vars.draw_start; y <= vars.draw_end; y++)
 	{
-    		int tex_y = ((y - vars.draw_start) * c->wall.tex_height) / vars.line_height;
+        int tex_y = ((y - vars.draw_start) * wall.tex_height) / vars.line_height;
 
-    		// Garantir que tex_y está dentro dos limites da textura
-    		if (tex_y < 0)
-    			tex_y = 0;
-    		else if (tex_y >= c->wall.tex_height)
-    			tex_y = c->wall.tex_height - 1;
+        if (tex_y < 0)
+            tex_y = 0;
+        else if (tex_y >= wall.tex_height)
+            tex_y = wall.tex_height - 1;
 
-    		int pixel_index = (tex_y * c->wall.tex_width + tex_x) * (c->img.bpp / 8);
+        int pixel_index = (tex_y * wall.tex_width + tex_x) * (wall.bpp / 8);
+        int color = *(int *)(wall.wall_pixels + pixel_index);
 
-    		// Garantir que a extração da cor está correta
-    		int color = *(int *)(c->wall.wall_pixels + pixel_index);
-
-    		ft_pixel_put(c->rx, y, &c->img, color);
+        ft_pixel_put(c->rx, y, &c->img, color);
 	}
 	//exit(1);
+	}*/
+
+	void	render_cast(t_data *c, t_vars *v)
+{
+		t_draw	vars;
+		t_wall  *wall = c->wall;
+
+		if (!wall->wall_pixels)
+		{
+			printf("Erro: ponteiro para a textura não inicializado!\n");
+			exit(1);
+		}
+		if (v->ray_dx == 0)
+			v->ray_dx = 0.000001;
+		if (v->ray_dy == 0)
+			v->ray_dy = 0.000001;
+		if (v->side == 0)
+			vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
+		else
+			vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
+		if (vars.wall_dist < 0.0001)
+			vars.wall_dist = 0.0001;
+		vars.line_height = (int)(HEIGHT / vars.wall_dist);
+		if (vars.line_height == 0)
+			vars.line_height = 1;
+		vars.draw_start = -vars.line_height / 2 + HEIGHT / 2;
+		if (vars.draw_start < 0)
+			vars.draw_start = 0;
+		vars.draw_end = vars.line_height / 2 + HEIGHT / 2;
+		if (vars.draw_end >= HEIGHT)
+			vars.draw_end = HEIGHT - 1;
+		double wall_x;
+		if (v->side == 0)
+			wall_x = c->player_y + vars.wall_dist * v->ray_dy;
+		else
+			wall_x = c->player_x + vars.wall_dist * v->ray_dx;
+		wall_x -= floor(wall_x);
+		int tex_x = (int)(wall_x * (double)wall->tex_width);
+		if ((v->side == 0 && v->ray_dx > 0) || (v->side == 1 && v->ray_dy < 0))
+			tex_x = wall->tex_width - tex_x - 1;
+		if (tex_x < 0 || tex_x >= wall->tex_width)
+		{
+			printf("Erro: tex_x fora dos limites da textura! tex_x = %d\n", tex_x);
+			exit(1);
+		}
+		for (int y = vars.draw_start; y <= vars.draw_end; y++)
+		{
+			int tex_y = ((y - vars.draw_start) * wall->tex_height) / vars.line_height;
+			if (tex_y < 0)
+			    tex_y = 0;
+			if (tex_y >= wall->tex_height)
+			    tex_y = wall->tex_height - 1;
+			if (tex_y < 0 || tex_y >= wall->tex_height)
+			{
+				printf("Erro: tex_y fora dos limites da textura! tex_y = %d\n", tex_y);
+				exit(1);
+			}
+			int pixel_index = tex_y * wall->line_len + tex_x * (wall->bpp / 8);
+			if (pixel_index < 0 || pixel_index >= wall->tex_width * wall->tex_height * (wall->bpp / 8))
+			{
+                printf("Erro: index fora dos limites da textura! pixel_index = %d\n", pixel_index);
+                continue;
+			}
+            if (pixel_index < 0 || pixel_index >= (wall->tex_width * wall->tex_height * (wall->bpp / 8)))
+            {
+				printf("Erro: index fora dos limites da textura! pixel_index = %d\n", pixel_index);
+				exit(1);
+			}
+			int color = *(int *)(wall->wall_pixels + pixel_index);
+			ft_pixel_put(c->rx, y, &c->img, color);
+		}
 }

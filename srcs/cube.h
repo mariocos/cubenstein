@@ -40,9 +40,12 @@ typedef struct s_img
 
 typedef struct s_wall
 {
-    void    *wall_texture;   // 🖼️ Ponteiro para a textura XPM
-    char    *wall_pixels;    // 📌 Dados da imagem XPM
-    int     tex_width;       // 📏 Largura da textura
+    void    *wall_texture;
+    char    *wall_pixels;
+    int     line_len;
+    int     bpp;
+    int     endian;
+    int     tex_width;
     int     tex_height;
 }            t_wall;
 
@@ -54,7 +57,7 @@ typedef struct s_data
 	t_img	img;
 	int	keys[8];
 	int		rx;
-	t_wall	wall;
+	t_wall	*wall;
     float     player_x;
     float     player_y;
 	float	player_dx;
