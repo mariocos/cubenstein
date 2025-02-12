@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 	cube.name = "cubo";
 
 
-	//data_init(&cube);
+	data_init(&cube);
 	cube_init(&cube);
 
 	mlx_hook(cube.mlx_window, KeyPress, KeyPressMask, ft_keypress, &cube);

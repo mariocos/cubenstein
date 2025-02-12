@@ -84,7 +84,7 @@ void	render_cast(t_data *c, t_vars *v)
 	//printf("wall dist %f and side %d\n", vars.wall_dist, v->side);
 	vars.line_height = (int)(HEIGHT / vars.wall_dist);
 	//printf("var line height is %d\n", vars.line_height);
-	
+
 	// Calculate start and end positions for the wall slice
 	vars.draw_start = -vars.line_height / 2 + HEIGHT / 2;
 	if (vars.draw_start < 0)
@@ -95,16 +95,46 @@ void	render_cast(t_data *c, t_vars *v)
 		vars.draw_end = HEIGHT - 1;
 
 	// Determine color based on side
-	int wall_color;
-	if (v->side == 0)
-		wall_color = RED; // Red for x-wall
-	else
-		wall_color = GREEN; // Green for y-wall
+	//int wall_color;
+	//if (v->side == 0)
+	//	wall_color = RED; // Red for x-wall
+	//else
+	//	wall_color = GREEN; // Green for y-wall
+	//wall_color = mlx_xpm_to_image(c->mlx_connection, "wall.xmp", vars.draw_start, vars.draw_end);
 
+	//mlx_xpm_file_to_image(c->mlx_connection, "wall.xmp", &vars.draw_start, &vars.draw_end);
+	//mlx_get_data_addr(void *img_ptr, int *bits_per_pixel, int *size_line, int *endian)
 	// Draw the vertical line representing the wall slice
+	//for (int y = vars.draw_start; y <= vars.draw_end; y++)
+	//{
+	//	ft_pixel_put(c->rx, y, &c->img, wall_color);
+	//}
+	int tex_x;
+	if (v->side == 0)
+        tex_x = (int)(c->player_y + vars.wall_dist * v->ray_dy) % c->wall.tex_width;
+	else
+        tex_x = (int)(c->player_x + vars.wall_dist * v->ray_dx) % c->wall.tex_width;
+
+	// Certificar que tex_x está dentro dos limites da textura
+	if (tex_x < 0)
+    		tex_x += c->wall.tex_width;
+
 	for (int y = vars.draw_start; y <= vars.draw_end; y++)
 	{
-		ft_pixel_put(c->rx, y, &c->img, wall_color);
+    		int tex_y = ((y - vars.draw_start) * c->wall.tex_height) / vars.line_height;
+
+    		// Garantir que tex_y está dentro dos limites da textura
+    		if (tex_y < 0)
+    			tex_y = 0;
+    		else if (tex_y >= c->wall.tex_height)
+    			tex_y = c->wall.tex_height - 1;
+
+    		int pixel_index = (tex_y * c->wall.tex_width + tex_x) * (c->img.bpp / 8);
+
+    		// Garantir que a extração da cor está correta
+    		int color = *(int *)(c->wall.wall_pixels + pixel_index);
+
+    		ft_pixel_put(c->rx, y, &c->img, color);
 	}
 	//exit(1);
 }
