@@ -105,5 +105,7 @@ int main(int argc, char **argv)
 	mlx_loop_hook(cube.mlx_connection, hook_loop, &cube);
 	//mlx_key_hook(cube.mlx_window, key_read, &cube);
 	mlx_loop(cube.mlx_connection);
+
+//	mlx_destroy_image(cube.mlx_connection, cube.wall);
 	return (0);
 }

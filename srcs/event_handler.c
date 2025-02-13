@@ -3,8 +3,11 @@
 int	close_handler(t_data *f)
 {
 	mlx_destroy_image(f->mlx_connection, f->img.img_ptr);
+	mlx_destroy_image(f->mlx_connection, f->wall->img_ptr);
 	mlx_destroy_window(f->mlx_connection, f->mlx_window);
 	mlx_destroy_display(f->mlx_connection);
+	free(f->wall_data);
+	free(f->wall);
 	free(f->mlx_connection);
 	exit(1);
 	return (-1);
@@ -53,12 +56,12 @@ void	key_read(t_data *c)
 	if (c->keys[0] == 1)//w key
 	{
 		c->player_y = w_key_y(c);
-		c->player_x = w_key_x(c); 
+		c->player_x = w_key_x(c);
 	}
 	else if (c->keys[1] == 1)//s key
 	{
 		c->player_y = s_key_y(c);
-		c->player_x = s_key_x(c); 
+		c->player_x = s_key_x(c);
 	}
 	if (c->keys[2] == 1)//A key
 	{
@@ -67,7 +70,7 @@ void	key_read(t_data *c)
 	}
 	else if (c->keys[3] == 1)//d key
 	{
-		c->player_y = d_key_y(c); 
+		c->player_y = d_key_y(c);
 		c->player_x = d_key_x(c);
 	}
 	// Rotate left (Left arrow key)
@@ -77,4 +80,3 @@ void	key_read(t_data *c)
 	if (c->keys[5] == 1)
 		rotation(c, 0.01);
 }
-

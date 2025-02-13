@@ -18,7 +18,7 @@
 # endif
 
 //changeables
-# define WIDTH 800
+# define WIDTH 1200
 # define HEIGHT 800
 # define PI	3.1415
 
@@ -38,6 +38,19 @@ typedef struct s_img
 	int		line_len;
 }				t_img;
 
+typedef struct s_wall
+{
+	int		text_width;
+	int		text_height;
+	double	wall_x;
+	int		tex_x;
+	int		tex_y;
+	double	step;
+	double	tex_pos;
+	int		pixel_index;
+	int		color;
+}	t_wall;
+
 typedef struct s_data
 {
 	char	*name;
@@ -46,6 +59,7 @@ typedef struct s_data
 	t_img	img;
 	int	keys[8];
 	int		rx;
+	t_wall	*wall_data;
 	t_img	*wall;
     float     player_x;
     float     player_y;
@@ -149,7 +163,7 @@ char	**ft_split(char const *s, char c);
 
 int map(int x, int in_min, int in_max, int out_min, int out_max);
 void load_texture(t_data *c);
-
+void	ft_bzero(void *str, size_t	num);
 
 
 

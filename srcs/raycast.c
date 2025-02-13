@@ -152,57 +152,48 @@ void load_texture(t_data *c)
     c->wall->pixels = mlx_get_data_addr(c->wall->img_ptr, &c->wall->bpp, &c->wall->line_len, &c->wall->endian);
 }
 
-
 void render_cast(t_data *c, t_vars *v)
 {
     t_draw vars;
-    // Cálculo correto da distância até a parede
+
     if (v->side == 0)
         vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
     else
         vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
-
-    // Corrigindo a altura da linha
     vars.line_height = (int)(HEIGHT / vars.wall_dist);
     vars.draw_start = -vars.line_height / 2 + HEIGHT / 2;
     if (vars.draw_start < 0)
         vars.draw_start = 0;
-
     vars.draw_end = vars.line_height / 2 + HEIGHT / 2;
     if (vars.draw_end >= HEIGHT)
         vars.draw_end = HEIGHT - 1;
-
-    int tex_width = 256;
-    int tex_height = 256;
-
-    // Cálculo correto de `wall_x`
-    double wall_x;
+    c->wall_data->text_width = 256;
+    c->wall_data->text_height = 256;
     if (v->side == 0 && v->ray_dx > 0)
-        wall_x = c->player_y + vars.wall_dist * v->ray_dy;
+        c->wall_data->wall_x = c->player_y + vars.wall_dist * v->ray_dy;
     else if (v->side == 1 && v->ray_dy < 0)
-        wall_x = c->player_x + vars.wall_dist * v->ray_dx;
+        c->wall_data->wall_x = c->player_x + vars.wall_dist * v->ray_dx;
     else if (v->side == 0 && v->ray_dx < 0)
-        wall_x = c->player_x + vars.wall_dist * v->ray_dy;
+        c->wall_data->wall_x = c->player_y + vars.wall_dist * v->ray_dy;
     else if (v->side == 1 && v->ray_dy > 0)
-        wall_x = c->player_y + vars.wall_dist * v->ray_dx;
-    wall_x -= floor(wall_x);
+        c->wall_data->wall_x = c->player_x + vars.wall_dist * v->ray_dx;
+    c->wall_data->wall_x -= floor(c->wall_data->wall_x);
 
-    int tex_x = (int)(wall_x * (double)tex_width);
+    c->wall_data->tex_x = (int)(c->wall_data->wall_x * (double)c->wall_data->text_width);
     if ((v->side == 0 && v->ray_dx > 0) || (v->side == 1 && v->ray_dy < 0))
-        tex_x = tex_width - tex_x - 1;
-
-    // Ajuste correto do passo da textura
-    double step = (double)tex_height / vars.line_height;
-    double tex_pos = (vars.draw_start - HEIGHT / 2 + vars.line_height / 2) * step;
-
+        c->wall_data->tex_x = c->wall_data->text_width - c->wall_data->tex_x - 1;
+    else if ((v->side == 1 && v->ray_dy < 0) || (v->side == 0 && v->ray_dx > 0))
+    	c->wall_data->tex_x = c->wall_data->text_width - c->wall_data->tex_x - 1;
+    c->wall_data->step = (double)c->wall_data->text_height / vars.line_height;
+    c->wall_data->tex_pos = (vars.draw_start - HEIGHT / 2 + vars.line_height / 2) * c->wall_data->step;
     for (int y = vars.draw_start; y <= vars.draw_end; y++)
     {
-        int tex_y = (int)tex_pos & (tex_height - 1);
-        tex_pos += step;
+        c->wall_data->tex_y = (int)c->wall_data->tex_pos & (c->wall_data->text_height - 1);
+        c->wall_data->tex_pos += c->wall_data->step;
 
-        int pixel_index = (tex_y * c->wall->line_len) + (tex_x * (c->wall->bpp / 8));
-        int color = *(int *)(c->wall->pixels + pixel_index);
+        c->wall_data->pixel_index = (c->wall_data->tex_y * c->wall->line_len) + (c->wall_data->tex_x * (c->wall->bpp / 8));
+        c->wall_data->color = *(int *)(c->wall->pixels + c->wall_data->pixel_index);
 
-        ft_pixel_put(c->rx, y, &c->img, color);
+        ft_pixel_put(c->rx, y, &c->img, c->wall_data->color);
     }
 }
