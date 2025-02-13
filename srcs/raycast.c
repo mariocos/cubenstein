@@ -70,147 +70,139 @@ void	hit_ray_into_wall(t_data *c, t_vars *v)
 	}
 }
 
-
-/*void	render_cast(t_data *c, t_vars *v)
+int map(int x, int in_min, int in_max, int out_min, int out_max)
 {
-	t_draw	vars;
-	t_wall    wall;
+      return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
-	wall.wall_texture = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", &c->wall.tex_width, &c->wall.tex_height);
-	if (!wall.wall_texture)
-	{
+//void	render_cast(t_data *c, t_vars *v)
+//{
+//	t_draw	vars;
+//	t_img    wall;
+//
+//	wall.img_ptr = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", &wall.line_len, &wall.endian);
+//	if (!wall.img_ptr)
+//	{
+//        printf("Erro ao carregar a textura!\n");
+//        exit(1);
+//    }
+//	wall.pixels = mlx_get_data_addr(wall.img_ptr, &wall.bpp, &wall.line_len, &wall.endian);
+//	//mlx_put_image_to_window (c->mlx_connection, c->mlx_window, wall.img_ptr, 0, 0);
+//	//printf("map  y %d and x %d player x  %f and y %f \n", v->map_x, v->map_y, c->player_x, c->player_y);
+//	//printf("ray sizes %f and %f\n", v->r_dist_x, v->r_dist_y);
+//	if (v->side == 0)
+//		vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
+//	else
+//		vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
+//	//printf("wall dist %f and side %d\n", vars.wall_dist, v->side);
+//	vars.line_height = (int)(HEIGHT / vars.wall_dist);
+//	//printf("var line height is %d\n", vars.line_height);
+//
+//	// Calculate start and end positions for the wall slice
+//	vars.draw_start = -vars.line_height / 2 + HEIGHT / 2;
+//	if (vars.draw_start < 0)
+//		vars.draw_start = 0;
+//
+//	vars.draw_end = vars.line_height / 2 + HEIGHT / 2;
+//	if (vars.draw_end >= HEIGHT)
+//		vars.draw_end = HEIGHT - 1;
+//
+//	// Determine color based on side
+//	int wall_color;
+//	if (v->side == 0)
+//		wall_color = RED; // Red for x-wall
+//	else
+//		wall_color = GREEN; // Green for y-wall
+//	//wall_color = mlx_xpm_to_image(c->mlx_connection, "wall.xmp", vars.draw_start, vars.draw_end);
+//
+//	//mlx_xpm_file_to_image(c->mlx_connection, "wall.xmp", &vars.draw_start, &vars.draw_end);
+//	//mlx_get_data_addr(void *img_ptr, int *bits_per_pixel, int *size_line, int *endian)
+//	// Draw the vertical line representing the wall slice
+//	for (int y = vars.draw_start; y <= vars.draw_end; y++)
+//	{
+//		ft_pixel_put(c->rx, y, &c->img, wall_color);
+//	}
+//	//exit(1);
+//}
+
+void clear_screen(t_data *c)
+{
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            int color = (y < HEIGHT / 2) ? 0x87CEEB : 0x654321; // Céu azul e chão marrom
+            ft_pixel_put(x, y, &c->img, color);
+        }
+    }
+}
+
+void load_texture(t_data *c)
+{
+    t_img *wall;
+
+    wall = malloc(sizeof(t_img));
+    c->wall = wall;
+    c->wall->img_ptr = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", &c->wall->line_len, &c->wall->endian);
+    if (!c->wall->img_ptr)
+    {
         printf("Erro ao carregar a textura!\n");
         exit(1);
     }
-    wall.wall_pixels = mlx_get_data_addr(wall.wall_texture, &wall.bpp, &wall.line_len, &wall.endian);
+    c->wall->pixels = mlx_get_data_addr(c->wall->img_ptr, &c->wall->bpp, &c->wall->line_len, &c->wall->endian);
+}
 
-	//printf("map  y %d and x %d player x  %f and y %f \n", v->map_x, v->map_y, c->player_x, c->player_y);
-	//printf("ray sizes %f and %f\n", v->r_dist_x, v->r_dist_y);
-	if (v->side == 0)
-		vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
-	else
-			vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
-	//printf("wall dist %f and side %d\n", vars.wall_dist, v->side);
-	vars.line_height = (int)(HEIGHT / vars.wall_dist);
-	//printf("var line height is %d\n", vars.line_height);
 
-	// Calculate start and end positions for the wall slice
-	vars.draw_start = -vars.line_height / 2 + HEIGHT / 2;
-	if (vars.draw_start < 0)
-		vars.draw_start = 0;
+void render_cast(t_data *c, t_vars *v)
+{
+    t_draw vars;
+    // Cálculo correto da distância até a parede
+    if (v->side == 0)
+        vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
+    else
+        vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
 
-	vars.draw_end = vars.line_height / 2 + HEIGHT / 2;
-	if (vars.draw_end >= HEIGHT)
-		vars.draw_end = HEIGHT - 1;
+    // Corrigindo a altura da linha
+    vars.line_height = (int)(HEIGHT / vars.wall_dist);
+    vars.draw_start = -vars.line_height / 2 + HEIGHT / 2;
+    if (vars.draw_start < 0)
+        vars.draw_start = 0;
 
-	// Determine color based on side
-	//int wall_color;
-	//if (v->side == 0)
-	//	wall_color = RED; // Red for x-wall
-	//else
-	//	wall_color = GREEN; // Green for y-wall
-	//wall_color = mlx_xpm_to_image(c->mlx_connection, "wall.xmp", vars.draw_start, vars.draw_end);
+    vars.draw_end = vars.line_height / 2 + HEIGHT / 2;
+    if (vars.draw_end >= HEIGHT)
+        vars.draw_end = HEIGHT - 1;
 
-	//mlx_xpm_file_to_image(c->mlx_connection, "wall.xmp", &vars.draw_start, &vars.draw_end);
-	//mlx_get_data_addr(void *img_ptr, int *bits_per_pixel, int *size_line, int *endian)
-	// Draw the vertical line representing the wall slice
-	//for (int y = vars.draw_start; y <= vars.draw_end; y++)
-	//{
-	//	ft_pixel_put(c->rx, y, &c->img, wall_color);
-	//}
-	int tex_x;
-	if (v->side == 0)
-        tex_x = (int)(c->player_y + vars.wall_dist * v->ray_dy) % wall.tex_width;
-	else
-        tex_x = (int)(c->player_x + vars.wall_dist * v->ray_dx) % wall.tex_width;
+    int tex_width = 256;
+    int tex_height = 256;
 
-	if (tex_x < 0)
-        tex_x += wall.tex_width;
+    // Cálculo correto de `wall_x`
+    double wall_x;
+    if (v->side == 0 && v->ray_dx > 0)
+        wall_x = c->player_y + vars.wall_dist * v->ray_dy;
+    else if (v->side == 1 && v->ray_dy < 0)
+        wall_x = c->player_x + vars.wall_dist * v->ray_dx;
+    else if (v->side == 0 && v->ray_dx < 0)
+        wall_x = c->player_x + vars.wall_dist * v->ray_dy;
+    else if (v->side == 1 && v->ray_dy > 0)
+        wall_x = c->player_y + vars.wall_dist * v->ray_dx;
+    wall_x -= floor(wall_x);
 
-	for (int y = vars.draw_start; y <= vars.draw_end; y++)
-	{
-        int tex_y = ((y - vars.draw_start) * wall.tex_height) / vars.line_height;
+    int tex_x = (int)(wall_x * (double)tex_width);
+    if ((v->side == 0 && v->ray_dx > 0) || (v->side == 1 && v->ray_dy < 0))
+        tex_x = tex_width - tex_x - 1;
 
-        if (tex_y < 0)
-            tex_y = 0;
-        else if (tex_y >= wall.tex_height)
-            tex_y = wall.tex_height - 1;
+    // Ajuste correto do passo da textura
+    double step = (double)tex_height / vars.line_height;
+    double tex_pos = (vars.draw_start - HEIGHT / 2 + vars.line_height / 2) * step;
 
-        int pixel_index = (tex_y * wall.tex_width + tex_x) * (wall.bpp / 8);
-        int color = *(int *)(wall.wall_pixels + pixel_index);
+    for (int y = vars.draw_start; y <= vars.draw_end; y++)
+    {
+        int tex_y = (int)tex_pos & (tex_height - 1);
+        tex_pos += step;
+
+        int pixel_index = (tex_y * c->wall->line_len) + (tex_x * (c->wall->bpp / 8));
+        int color = *(int *)(c->wall->pixels + pixel_index);
 
         ft_pixel_put(c->rx, y, &c->img, color);
-	}
-	//exit(1);
-	}*/
-
-	void	render_cast(t_data *c, t_vars *v)
-{
-		t_draw	vars;
-		t_wall  *wall = c->wall;
-
-		if (!wall->wall_pixels)
-		{
-			printf("Erro: ponteiro para a textura não inicializado!\n");
-			exit(1);
-		}
-		if (v->ray_dx == 0)
-			v->ray_dx = 0.000001;
-		if (v->ray_dy == 0)
-			v->ray_dy = 0.000001;
-		if (v->side == 0)
-			vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
-		else
-			vars.wall_dist = (v->map_y - c->player_y + (1 - v->ray_y_step) / 2) / v->ray_dy;
-		if (vars.wall_dist < 0.0001)
-			vars.wall_dist = 0.0001;
-		vars.line_height = (int)(HEIGHT / vars.wall_dist);
-		if (vars.line_height == 0)
-			vars.line_height = 1;
-		vars.draw_start = -vars.line_height / 2 + HEIGHT / 2;
-		if (vars.draw_start < 0)
-			vars.draw_start = 0;
-		vars.draw_end = vars.line_height / 2 + HEIGHT / 2;
-		if (vars.draw_end >= HEIGHT)
-			vars.draw_end = HEIGHT - 1;
-		double wall_x;
-		if (v->side == 0)
-			wall_x = c->player_y + vars.wall_dist * v->ray_dy;
-		else
-			wall_x = c->player_x + vars.wall_dist * v->ray_dx;
-		wall_x -= floor(wall_x);
-		int tex_x = (int)(wall_x * (double)wall->tex_width);
-		if ((v->side == 0 && v->ray_dx > 0) || (v->side == 1 && v->ray_dy < 0))
-			tex_x = wall->tex_width - tex_x - 1;
-		if (tex_x < 0 || tex_x >= wall->tex_width)
-		{
-			printf("Erro: tex_x fora dos limites da textura! tex_x = %d\n", tex_x);
-			exit(1);
-		}
-		for (int y = vars.draw_start; y <= vars.draw_end; y++)
-		{
-			int tex_y = ((y - vars.draw_start) * wall->tex_height) / vars.line_height;
-			if (tex_y < 0)
-			    tex_y = 0;
-			if (tex_y >= wall->tex_height)
-			    tex_y = wall->tex_height - 1;
-			if (tex_y < 0 || tex_y >= wall->tex_height)
-			{
-				printf("Erro: tex_y fora dos limites da textura! tex_y = %d\n", tex_y);
-				exit(1);
-			}
-			int pixel_index = tex_y * wall->line_len + tex_x * (wall->bpp / 8);
-			if (pixel_index < 0 || pixel_index >= wall->tex_width * wall->tex_height * (wall->bpp / 8))
-			{
-                printf("Erro: index fora dos limites da textura! pixel_index = %d\n", pixel_index);
-                continue;
-			}
-            if (pixel_index < 0 || pixel_index >= (wall->tex_width * wall->tex_height * (wall->bpp / 8)))
-            {
-				printf("Erro: index fora dos limites da textura! pixel_index = %d\n", pixel_index);
-				exit(1);
-			}
-			int color = *(int *)(wall->wall_pixels + pixel_index);
-			ft_pixel_put(c->rx, y, &c->img, color);
-		}
+    }
 }

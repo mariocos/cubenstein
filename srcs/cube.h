@@ -38,17 +38,6 @@ typedef struct s_img
 	int		line_len;
 }				t_img;
 
-typedef struct s_wall
-{
-    void    *wall_texture;
-    char    *wall_pixels;
-    int     line_len;
-    int     bpp;
-    int     endian;
-    int     tex_width;
-    int     tex_height;
-}            t_wall;
-
 typedef struct s_data
 {
 	char	*name;
@@ -57,7 +46,7 @@ typedef struct s_data
 	t_img	img;
 	int	keys[8];
 	int		rx;
-	t_wall	*wall;
+	t_img	*wall;
     float     player_x;
     float     player_y;
 	float	player_dx;
@@ -158,6 +147,8 @@ char	**ft_split(char const *s, char c);
 /*     parsing    */
 
 
+int map(int x, int in_min, int in_max, int out_min, int out_max);
+void load_texture(t_data *c);
 
 
 

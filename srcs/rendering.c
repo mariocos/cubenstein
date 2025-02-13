@@ -1,4 +1,5 @@
 #include "cube.h"
+#include <complex.h>
 
 void	ft_pixel_put(int x, int y, t_img *img, int color)
 {
@@ -6,11 +7,6 @@ void	ft_pixel_put(int x, int y, t_img *img, int color)
 
 	offset = (y * img->line_len) + (x * (img->bpp / 8));
 	*(unsigned int *)(img->pixels + offset) = color;
-}
-
-long map(long x, long in_min, long in_max, long out_min, long out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 
@@ -30,7 +26,7 @@ void	handle_pixel(int x, int y, t_data *s)
 
 
 
-/* 
+/*
 	if (y < HEIGHT / 2)
 		ft_pixel_put(x, y, &s->img, BLACK);
 	else
@@ -127,5 +123,5 @@ void	draw_ray(t_data *f)
 			draw_line(f->mlx_connection, f->mlx_window, f->player_x, f->player_y, f->player_x + rx * 50, f->player_y + ry * 50, BLUE);
 		}
 	}
-	
+
 }
