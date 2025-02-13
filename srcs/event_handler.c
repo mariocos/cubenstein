@@ -2,12 +2,17 @@
 
 int	close_handler(t_data *f)
 {
+	int	i;
+
+	i = 4;
 	mlx_destroy_image(f->mlx_connection, f->img.img_ptr);
-	mlx_destroy_image(f->mlx_connection, f->wall->img_ptr);
 	mlx_destroy_window(f->mlx_connection, f->mlx_window);
 	mlx_destroy_display(f->mlx_connection);
-	free(f->wall_data);
-	free(f->wall);
+	while (--i)
+	{
+		mlx_destroy_image(f->mlx_connection, f->wall_data[i]->wall->img_ptr);
+		free(f->wall_data[i]->wall);
+	}
 	free(f->mlx_connection);
 	exit(1);
 	return (-1);

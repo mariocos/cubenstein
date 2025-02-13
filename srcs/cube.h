@@ -40,6 +40,7 @@ typedef struct s_img
 
 typedef struct s_wall
 {
+	t_img	*wall;
 	int		text_width;
 	int		text_height;
 	double	wall_x;
@@ -59,8 +60,7 @@ typedef struct s_data
 	t_img	img;
 	int	keys[8];
 	int		rx;
-	t_wall	*wall_data;
-	t_img	*wall;
+	t_wall	*wall_data[4];
     float     player_x;
     float     player_y;
 	float	player_dx;
@@ -162,7 +162,11 @@ char	**ft_split(char const *s, char c);
 
 
 int map(int x, int in_min, int in_max, int out_min, int out_max);
-void load_texture(t_data *c);
+void load_texture_1(t_data *c);
+void load_texture_2(t_data *c);
+void load_texture_3(t_data *c);
+void load_texture_4(t_data *c);
+
 void	ft_bzero(void *str, size_t	num);
 
 

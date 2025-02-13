@@ -28,9 +28,12 @@ void	cube_init(t_data *cube)
 		free (cube->mlx_connection);
 		free_error();
 	}
-	load_texture(cube);
 	cube->img.pixels = mlx_get_data_addr(cube->img.img_ptr,
 			&cube->img.bpp, &cube->img.line_len, &cube->img.endian);
+	load_texture_1(cube);
+	load_texture_2(cube);
+	load_texture_3(cube);
+	load_texture_4(cube);
 	//printf("abrir....\n");
 	//cube->wall->wall_texture = mlx_xpm_file_to_image(cube->mlx_connection, "srcs/wall.xpm", &cube->wall->tex_width, &cube->wall->tex_height);
 	//if (!cube->wall->wall_texture)

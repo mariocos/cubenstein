@@ -137,25 +137,67 @@ void clear_screen(t_data *c)
     }
 }
 
-void load_texture(t_data *c)
+void load_texture_4(t_data *c)
 {
-    t_img *wall;
-
-    wall = malloc(sizeof(t_img));
-    c->wall = wall;
-    c->wall->img_ptr = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", &c->wall->line_len, &c->wall->endian);
-    if (!c->wall->img_ptr)
+	c->wall_data[3]->wall->img_ptr = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", \
+    			&c->wall_data[3]->wall->line_len, &c->wall_data[3]->wall->endian);
+    if (!c->wall_data[3]->wall->img_ptr)
     {
         printf("Erro ao carregar a textura!\n");
         exit(1);
     }
-    c->wall->pixels = mlx_get_data_addr(c->wall->img_ptr, &c->wall->bpp, &c->wall->line_len, &c->wall->endian);
+    c->wall_data[3]->wall->pixels = mlx_get_data_addr(c->wall_data[3]->wall->img_ptr, \
+ 			&c->wall_data[3]->wall->bpp, &c->wall_data[3]->wall->line_len, \
+ 			&c->wall_data[3]->wall->endian);
+}
+
+void load_texture_3(t_data *c)
+{
+	c->wall_data[2]->wall->img_ptr = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", \
+    			&c->wall_data[2]->wall->line_len, &c->wall_data[2]->wall->endian);
+    if (!c->wall_data[2]->wall->img_ptr)
+    {
+        printf("Erro ao carregar a textura!\n");
+        exit(1);
+    }
+    c->wall_data[2]->wall->pixels = mlx_get_data_addr(c->wall_data[2]->wall->img_ptr, \
+ 			&c->wall_data[2]->wall->bpp, &c->wall_data[2]->wall->line_len, \
+ 			&c->wall_data[2]->wall->endian);
+}
+
+void load_texture_2(t_data *c)
+{
+	c->wall_data[1]->wall->img_ptr = mlx_xpm_file_to_image(c->mlx_connection, "srcs/texture_2.xpm", \
+    			&c->wall_data[1]->wall->line_len, &c->wall_data[1]->wall->endian);
+    if (!c->wall_data[1]->wall->img_ptr)
+    {
+        printf("Erro ao carregar a textura!\n");
+        exit(1);
+    }
+    c->wall_data[1]->wall->pixels = mlx_get_data_addr(c->wall_data[1]->wall->img_ptr, \
+ 			&c->wall_data[1]->wall->bpp, &c->wall_data[1]->wall->line_len, \
+ 			&c->wall_data[1]->wall->endian);
+}
+
+void load_texture_1(t_data *c)
+{
+	write(1, "aqui\n", 6);
+    c->wall_data[0]->wall->img_ptr = mlx_xpm_file_to_image(c->mlx_connection, "srcs/wall.xpm", \
+ 			&c->wall_data[0]->wall->line_len, &c->wall_data[0]->wall->endian);
+    if (!c->wall_data[0]->wall->img_ptr)
+    {
+        printf("Erro ao carregar a textura!\n");
+        exit(1);
+    }
+    c->wall_data[0]->wall->pixels = mlx_get_data_addr(c->wall_data[0]->wall->img_ptr, \
+ 			&c->wall_data[0]->wall->bpp, &c->wall_data[0]->wall->line_len, \
+ 			&c->wall_data[0]->wall->endian);
 }
 
 void render_cast(t_data *c, t_vars *v)
 {
     t_draw vars;
-
+    int		i;
     if (v->side == 0)
         vars.wall_dist = (v->map_x - c->player_x + (1 - v->ray_x_step) / 2) / v->ray_dx;
     else
@@ -167,33 +209,41 @@ void render_cast(t_data *c, t_vars *v)
     vars.draw_end = vars.line_height / 2 + HEIGHT / 2;
     if (vars.draw_end >= HEIGHT)
         vars.draw_end = HEIGHT - 1;
-    c->wall_data->text_width = 256;
-    c->wall_data->text_height = 256;
+    i = -1;
     if (v->side == 0 && v->ray_dx > 0)
-        c->wall_data->wall_x = c->player_y + vars.wall_dist * v->ray_dy;
+    {
+        c->wall_data[1]->wall_x = c->player_y + vars.wall_dist * v->ray_dy;
+        i = 1;
+    }
     else if (v->side == 1 && v->ray_dy < 0)
-        c->wall_data->wall_x = c->player_x + vars.wall_dist * v->ray_dx;
+    {
+    	c->wall_data[2]->wall_x = c->player_x + vars.wall_dist * v->ray_dx;
+        i = 2;
+    }
     else if (v->side == 0 && v->ray_dx < 0)
-        c->wall_data->wall_x = c->player_y + vars.wall_dist * v->ray_dy;
+   	{
+    	c->wall_data[3]->wall_x = c->player_y + vars.wall_dist * v->ray_dy;
+     	i = 3;
+    }
     else if (v->side == 1 && v->ray_dy > 0)
-        c->wall_data->wall_x = c->player_x + vars.wall_dist * v->ray_dx;
-    c->wall_data->wall_x -= floor(c->wall_data->wall_x);
-
-    c->wall_data->tex_x = (int)(c->wall_data->wall_x * (double)c->wall_data->text_width);
+    {
+    	c->wall_data[0]->wall_x = c->player_x + vars.wall_dist * v->ray_dx;
+        i = 0;
+    }
+    c->wall_data[i]->wall_x -= floor(c->wall_data[i]->wall_x);
+    c->wall_data[i]->tex_x = (int)(c->wall_data[i]->wall_x * (double)c->wall_data[i]->text_width);
     if ((v->side == 0 && v->ray_dx > 0) || (v->side == 1 && v->ray_dy < 0))
-        c->wall_data->tex_x = c->wall_data->text_width - c->wall_data->tex_x - 1;
+        c->wall_data[i]->tex_x = c->wall_data[i]->text_width - c->wall_data[i]->tex_x - 1;
     else if ((v->side == 1 && v->ray_dy < 0) || (v->side == 0 && v->ray_dx > 0))
-    	c->wall_data->tex_x = c->wall_data->text_width - c->wall_data->tex_x - 1;
-    c->wall_data->step = (double)c->wall_data->text_height / vars.line_height;
-    c->wall_data->tex_pos = (vars.draw_start - HEIGHT / 2 + vars.line_height / 2) * c->wall_data->step;
+    	c->wall_data[i]->tex_x = c->wall_data[i]->text_width - c->wall_data[i]->tex_x - 1;
+    c->wall_data[i]->step = (double)c->wall_data[i]->text_height / vars.line_height;
+    c->wall_data[i]->tex_pos = (vars.draw_start - HEIGHT / 2 + vars.line_height / 2) * c->wall_data[i]->step;
     for (int y = vars.draw_start; y <= vars.draw_end; y++)
     {
-        c->wall_data->tex_y = (int)c->wall_data->tex_pos & (c->wall_data->text_height - 1);
-        c->wall_data->tex_pos += c->wall_data->step;
-
-        c->wall_data->pixel_index = (c->wall_data->tex_y * c->wall->line_len) + (c->wall_data->tex_x * (c->wall->bpp / 8));
-        c->wall_data->color = *(int *)(c->wall->pixels + c->wall_data->pixel_index);
-
-        ft_pixel_put(c->rx, y, &c->img, c->wall_data->color);
+        c->wall_data[i]->tex_y = (int)c->wall_data[i]->tex_pos & (c->wall_data[i]->text_height - 1);
+        c->wall_data[i]->tex_pos += c->wall_data[i]->step;
+        c->wall_data[i]->pixel_index = (c->wall_data[i]->tex_y * c->wall_data[i]->wall->line_len) + (c->wall_data[i]->tex_x * (c->wall_data[i]->wall->bpp / 8));
+        c->wall_data[i]->color = *(int *)(c->wall_data[i]->wall->pixels + c->wall_data[i]->pixel_index);
+        ft_pixel_put(c->rx, y, &c->img, c->wall_data[i]->color);
     }
 }
